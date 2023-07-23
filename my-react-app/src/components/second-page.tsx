@@ -57,9 +57,9 @@ const SecondPage: React.FC = () => {
   };
 
   // Function to check if all sub-departments of a department are selected
-  const areAllSubDepartmentsSelected = (subDepartments: { id: string }[]) => {
-    return subDepartments.every((subDep) => selected.includes(subDep.id));
-  };
+//   const areAllSubDepartmentsSelected = (subDepartments: { id: string }[]) => {
+//     return subDepartments.every((subDep) => selected.includes(subDep.id));
+//   };
 
   // Function to handle the department checkbox change event
   const handleDepartmentCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>, id: string) => {
@@ -79,7 +79,7 @@ const SecondPage: React.FC = () => {
   };
   
   return (
-    <div className="container">
+    <div>
       <h1>Second Page</h1>
       <div className="datagrid-container">
         <DataGridPro rows={data} columns={columns} />
