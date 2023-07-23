@@ -1,6 +1,6 @@
 import React from 'react';
-import FirstPage from './components/first-page';
-import SecondPage from './components/second-page';
+import FirstPage from './pages/first-page';
+import SecondPage from './pages/second-page';
 import {  Route, Routes } from 'react-router-dom';
 
 

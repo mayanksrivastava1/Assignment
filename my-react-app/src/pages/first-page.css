@@ -2,10 +2,10 @@
 
 /* Container for the entire page */
 .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+   display: block;
+   margin-top: 25vh;
+   margin-left: 70vh;
+   height: 100vh;
   }
   
   /* Card styling */
