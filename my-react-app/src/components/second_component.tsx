@@ -1,111 +1,142 @@
-import React, {  useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TreeView, TreeItem } from '@mui/lab';
 import { Checkbox, FormControlLabel } from '@mui/material';
 
-const Secondcomponent: React.FC = () => {
+const Secondcomponent : React.FC = () => {
+  const [departmentData, setDepartmentData] = useState<JSX.Element[]>([]);
+
+  const departments = [
+    {
+      id: 'dep1',
+      name: 'Customer_service',
+      isChecked: false,
+      subDepartments: [
+        { id: 'subDep1', name: 'Support', isChecked: false },
+        { id: 'subDep2', name: 'Customer_Success', isChecked: false },
+      ],
+    },
+    {
+      id: 'dep2',
+      name: 'Design',
+      isChecked: false,
+      subDepartments: [
+        { id: 'subDep3', name: 'graphic_design', isChecked: false },
+        { id: 'subDep4', name: 'product_design', isChecked: false },
+        { id: 'subDep5', name: 'web_design', isChecked: false }
+      ],
+    },
+  ];
 
 
-    const departments = [
-        {
-          id: 'dep1',
-          name: 'Customer_service',
-          subDepartments: [
-            { id: 'subDep1', name: 'Support' },
-            { id: 'subDep2', name: 'Customer_Success' },
-          ],
-        },
-        {
-          id: 'dep2',
-          name: 'Design',
-          subDepartments: [
-            { id: 'subDep3', name: 'graphic_design' },
-            { id: 'subDep4', name: 'product_design' },
-            {id : 'subDep5' , name: 'web_design'}
-          ],
-        },
-      ];
-      // State to store the selected departments and sub-departments
-      const [selected, setSelected] = useState<string[]>([]);
-    
-      // Function to handle the checkbox change event
-      const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>, id: string) => {
-        if (event.target.checked) {
-          // If the checkbox is checked, add the ID to the selected array
-          setSelected([...selected, id]);
-        } else {
-          // If the checkbox is unchecked, remove the ID from the selected array
-          setSelected(selected.filter((itemId) => itemId !== id));
-        }
-      };
-    
-    
-    
-      // Function to handle the department checkbox change event
-      const handleDepartmentCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>, id: string) => {
-        if (event.target.checked) {
-          // If the checkbox is checked, add the department and its sub-departments to the selected array
-          const subDepartmentsIds = departments.find((dep) => dep.id === id)?.subDepartments.map((subDep) => subDep.id);
-          if (subDepartmentsIds) {
-            setSelected([...selected, id, ...subDepartmentsIds]);
+
+
+  function checkIt(outerId: string, innerId: string) {
+    let countCheck = 0;
+    let mainSize = 0;
+    departments.map((main) => {
+      if (main.id === outerId) {
+        mainSize = main.subDepartments.length;
+
+        main.subDepartments.map((inmain) => {
+          if (inmain.id === innerId) {
+            if (inmain.isChecked === false) {
+              inmain.isChecked = true;
+            }
+            else {
+              inmain.isChecked = false;
+            }
           }
-        } else {
-          // If the checkbox is unchecked, remove the department and its sub-departments from the selected array
-          const subDepartmentsIds = departments.find((dep) => dep.id === id)?.subDepartments.map((subDep) => subDep.id);
-          if (subDepartmentsIds) {
-            setSelected(selected.filter((itemId) => !subDepartmentsIds.includes(itemId)));
+          if (inmain.isChecked === true) {
+            countCheck = countCheck + 1;
           }
+        })
+        if (mainSize === countCheck) {
+          main.isChecked = true;
         }
-      };
+        else {
+          main.isChecked = false;
+        }
+      }
+      setDepartmentData(data);
+    })
+  }
 
 
-      return (
-        <div>
-            <div className="departments-container">
+
+
+  function handleOuterCheckBox(outerId : string) {
+    departments.map((main) => {
+      if (main.id === outerId) {
+        if (main.isChecked === false) {
+          main.isChecked = true;
+          main.subDepartments.map((inmain) => {
+            inmain.isChecked = true;
+          })
+        }
+        else {
+          main.isChecked = false;
+          main.subDepartments.map((inmain) => {
+            inmain.isChecked = false;
+          })
+        }
+      }
+      setDepartmentData(data);
+    })
+  }
+
+
+
+  const data = () => {
+    return departments.map((department) => (
+      <TreeItem
+        key={department.id}
+        nodeId={department.id}
+        label={
+          <FormControlLabel
+            control={<Checkbox checked={department.isChecked} onClick={() => { handleOuterCheckBox(department.id) }} />}
+            label={department.name}
+          />
+        }
+      >
+        {department.subDepartments.map((subDepartment) => (
+          <TreeItem
+            key={subDepartment.id}
+            nodeId={subDepartment.id}
+            label={
+              <FormControlLabel
+                control={<Checkbox checked={subDepartment.isChecked} onClick={() => { checkIt(department.id, subDepartment.id) }} />}
+                label={subDepartment.name}
+              />
+            }
+          />
+        ))}
+      </TreeItem>
+    ));
+  };
+
+
+  
+  useEffect(() => {
+    setDepartmentData(data);
+  }, []);
+
+
+  return (
+    <div>
+      <div className="departments-container">
         <h2>List of Departments and Sub-Departments</h2>
         <TreeView
           defaultCollapseIcon={<span>-</span>}
           defaultExpandIcon={<span>+</span>}
           multiSelect
         >
-          {departments.map((department) => (
-            <TreeItem
-              key={department.id}
-              nodeId={department.id}
-              label={
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={selected.includes(department.id)}
-                      onChange={(event) => handleDepartmentCheckboxChange(event, department.id)}
-                    />
-                  }
-                  label={department.name}
-                />
-              }
-            >
-              {department.subDepartments.map((subDepartment) => (
-                <TreeItem
-                  key={subDepartment.id}
-                  nodeId={subDepartment.id}
-                  label={
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={selected.includes(subDepartment.id)}
-                          onChange={(event) => handleCheckboxChange(event, subDepartment.id)}
-                        />
-                      }
-                      label={subDepartment.name}
-                    />
-                  }
-                />
-              ))}
-            </TreeItem>
-          ))}
+
+
+          {departmentData}
         </TreeView>
       </div>
-      </div>
-      );
+    </div>
+  );
 };
 
 export default Secondcomponent
