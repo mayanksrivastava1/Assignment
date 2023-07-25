@@ -28,7 +28,7 @@ const Secondcomponent : React.FC = () => {
   ];
 
 
-
+// Function to handle inner checkboxes and if all inner checkboxes are checked then also updates to outer checkbox (parent Checkbox)
 
   function checkIt(outerId: string, innerId: string) {
     let countCheck = 0;
@@ -62,7 +62,7 @@ const Secondcomponent : React.FC = () => {
   }
 
 
-
+ // Function to handle outer checkbox
 
   function handleOuterCheckBox(outerId : string) {
     departments.map((main) => {
@@ -83,8 +83,6 @@ const Secondcomponent : React.FC = () => {
       setDepartmentData(data);
     })
   }
-
-
 
   const data = () => {
     return departments.map((department) => (
@@ -130,7 +128,6 @@ const Secondcomponent : React.FC = () => {
           defaultExpandIcon={<span>+</span>}
           multiSelect
         >
-
 
           {departmentData}
         </TreeView>
